@@ -1,6 +1,0 @@
-class cScoreBoard(object):
-    pass
-
-
-
-

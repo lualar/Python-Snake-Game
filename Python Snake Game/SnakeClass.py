@@ -1,5 +1,5 @@
-from tempfile import tempdir
 from turtle import Turtle
+from Parameters import Parameters
 
 iUP = 90
 iDown = 270
@@ -8,9 +8,10 @@ iLeft = 180
 
 class Snake:
     def __init__(self):
+        cParam = Parameters()
         #Snake initial parameters
         self.iSnakeLenght = 3  #Initial  snake length 
-        self.iDistance = 20  #each step  --screen dots
+        self.iDistance = cParam.getSnakeSize() #each step  --screen dots
         self.iSneakHeadPosx  = 0  #Snake Head position
         self.iSneakHeadPosY = 0
         self.sSnakeColor = "White"
@@ -53,22 +54,22 @@ class Snake:
 
     #Functions to move the snake throught the screen
     def moveRight(self):
-        if self.iSnakeHeading != iLeft:
-            self.iSnakeHeading = "R"    
+        if self.iSnakeHeading != "Left":
+            self.iSnakeHeading = "Right"    
             self.theSnakes[0].setheading(iRight) 
 
     def moveLeft(self):
-        if self.iSnakeHeading != iRight :
-            self.iSnakeHeading = "L"
+        if self.iSnakeHeading != "Right":
+            self.iSnakeHeading = "Left"
             self.theSnakes[0].setheading(iLeft) 
 
     def turnUp(self):
-        if self.iSnakeHeading != iDown:
-            self.iSnakeHeading = "U"
+        if self.iSnakeHeading != "Down":
+            self.iSnakeHeading = "Up"
             self.theSnakes[0].setheading(iUP)
                 
     def turnDown(self):
-        if self.iSnakeHeading != iUP :
-            self.iSnakeHeading = "D"
+        if self.iSnakeHeading != "Up" :
+            self.iSnakeHeading = "Down"
             self.theSnakes[0].setheading(iDown)                
 
