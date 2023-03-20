@@ -5,7 +5,7 @@ class Parameters():
         #Program Variables or Constants
         self.sTitle = "my Snake Game - Python"
         self.iScreenWidth = 600   #Future improvement, ask user for screen size??
-        self.iScreenHeight = 600
+        self.iScreenHeight = 500
         self.sBackColor = "Black"
         self.iSnakeSize = 20  #Snake Size of pixels
         self.iScore = 0  #Player Score

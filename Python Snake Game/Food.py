@@ -10,7 +10,6 @@ class Food(Turtle):
 
         #Get windows size
         cParam = Parameters()
-        
 
         #get a position inside screen border limits
         self.iScreenLimits = cParam.getScreenLimit()

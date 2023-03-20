@@ -6,7 +6,7 @@ iDown = 270
 iRight = 0
 iLeft = 180
 
-class Snake:
+class Snake():
     def __init__(self):
         cParam = Parameters()
         #Snake initial parameters
@@ -20,6 +20,9 @@ class Snake:
         self.theSnakes = []   #Snake array
         self.fCreateSnake()
 
+        #Get Screen Borders 
+        self.lScreenLimits = cParam.getScreenLimit()
+
     #Create snake
     def fCreateSnake(self):
         #create the Snake at center of the screen
@@ -28,6 +31,7 @@ class Snake:
                 tempSnake = Turtle("square")
                 tempSnake .penup()
                 tempSnake.color(self.sSnakeColor)
+                tempSnake.speed("fastest")
                 self.theSnakes.append(tempSnake)
                 self.fSnakeCoordinates(oSnake=tempSnake, iPosX=self.iSneakHeadPosx, iPosY= self.iSneakHeadPosY, iDeltaX= self.iSneakHeadPosx-(20*i), iDeltaY=self.iSneakHeadPosY)
         except Exception as ex:
@@ -46,11 +50,80 @@ class Snake:
     #locate snake @ screen
     def fSnakeCoordinates(self, oSnake, iPosX, iPosY, iDeltaX=0, iDeltaY=0):
         try:
+            oSnake
             oSnake.goto(iPosX + iDeltaX, iPosY + iDeltaY)
             oSnake.setx(iPosX + iDeltaX)
             oSnake.sety(iPosY + iDeltaY)
         except Exception as ex:
             print (f"Error Snake Coordinates: {str(ex)}")
+
+    #Snake Grow (after eat food)
+    def fSnakeGrow(self):
+        #Add new squeare on tail
+        try:
+            #New Square
+            tempSnake = Turtle("square")
+            tempSnake.penup()
+            tempSnake.speed("fastest")
+            tempSnake.color("black")  #Initially create tail on black to hide it
+
+            #Current Tail Location
+            xPos = self.theSnakes[self.iSnakeLenght-1].xcor()
+            yPos = self.theSnakes[self.iSnakeLenght-1].ycor()
+
+            #new tail location
+            if self.iSnakeHeading == "Left":
+                #Validate Snake is not in right border
+                if xPos+20 < self.lScreenLimits[0]:
+                    xPos += 20
+                #Validate Snake tail is not in upper border
+                elif yPos + 20 < self.lScreenLimits[2]:
+                    yPos += 20
+                #Otherwise snake tail is on upper border
+                else:
+                    ypos -= 20
+            elif self.iSnakeHeading == "Right":
+                #Validate Snake is not in left border
+                if xPos-20 < self.lScreenLimits[1]:
+                    xPos -= 20
+                #Validate Snake tail is not in upper border
+                elif yPos + 20 < self.lScreenLimits[2]:
+                    yPos += 20
+                #Otherwise snake tail is on upper border
+                else:
+                    ypos -= 20
+            elif self.iSnakeHeading == "UP":
+                #Validate Snake is not in Upper border
+                if yPos+20 < self.lScreenLimits[2]:
+                    YPos += 20
+                #Validate Snake tail is not in right border
+                elif xPos + 20 < self.lScreenLimits[0]:
+                    xPos += 20
+                #Otherwise snake tail is on left border
+                else:
+                    xpos -= 20
+            else: #Down
+                #Validate Snake is not in Upper border
+                if yPos-20 < self.lScreenLimits[3]:
+                    YPos += 20
+                #Validate Snake tail is not in right border
+                elif xPos + 20 < self.lScreenLimits[0]:
+                    xPos += 20
+                #Otherwise snake tail is on left border
+                else:
+                    xpos -= 20
+
+            #Add new square to snake chain
+            self.theSnakes.append(tempSnake)
+            self.iSnakeLenght += 1
+
+            #locate new square on screen
+            self.fSnakeCoordinates(tempSnake, iPosX=xPos, iPosY= yPos, iDeltaX=0, iDeltaY=0)
+            #Show the new tail
+            self.theSnakes[self.iSnakeLenght-1].color(self.sSnakeColor)
+
+        except Exception as ex:
+            print (f"Error Snake Grow: {str(ex)}")
 
     #Functions to move the snake throught the screen
     def moveRight(self):

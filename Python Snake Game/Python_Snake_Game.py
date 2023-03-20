@@ -20,17 +20,39 @@ def fCleanScreen(theScreen):
     theScreen.bgcolor(cParam.sBackColor)
     theScreen.title(f"{cParam.sTitle}")
       
-def bDetectCollition():
+def bDetectFoodCollition(cSnakeHead):
     #validate if Snake Head  position is same of food point
-    if cSnake.theSnakes[0].distance(cFood) < cParam.iSnakeSize-5:
+    if cSnakeHead.distance(cFood) < cParam.iSnakeSize-5:
         cFood.fFoodRefresh()
+        cSnake.fSnakeGrow()
         return True
+    return False
+
+def bDetectBorder(cSnakeHead, lScreenLimits):
+    #Snake Head Position -- Tuple (x,y)
+    tCurrentPosition = cSnakeHead.pos()
+
+    #validate if Snake Head  position is same of food point
+    if (tCurrentPosition[0] == lScreenLimits[0]) or (tCurrentPosition[0] == lScreenLimits[1]) or (tCurrentPosition[1] == lScreenLimits[2]) or (tCurrentPosition[1] == lScreenLimits[3]):
+        return True
+
+    #If not border return false, game continues
+    return False
+
+def bDetectCollitionWithBody(cSnakeHead):
+
+    #validate if head is on same position of any other square of the Snake
+    for i in range(1, cSnake.iSnakeLenght):
+        if cSnakeHead.distance(cSnake.theSnakes[i]) < cParam.iSnakeSize-5:
+            return True
+    #If not game continues
     return False
 
 #Game Status Control
 fCleanScreen(theScreen)
 print ("\nGame Start")
 bGameIsOn = True
+
 #create snake object
 cSnake = Snake()
 cFood = Food()
@@ -45,18 +67,29 @@ theScreen.onkey(key="Left",fun=cSnake.moveLeft)   #This is a sample of a higher 
 theScreen.onkey(key="Right",fun=cSnake.moveRight)   #This is a sample of a higher order function
 theScreen.listen()
 
+#Get Screen Borders 
+lScreenLimits = cParam.getScreenLimit()
+
 #Snake walk through screen
+
 while bGameIsOn:
     theScreen.update()
-    time.sleep(0.1)
     cSnake.fTracer()
     #Detect Collition
-    if bDetectCollition():
+    if bDetectFoodCollition(cSnake.theSnakes[0]):
         #Increment Score
         cParam.bUpdateScore(1)
         cScore.bPrintScore(cParam.getScore())
-        cFood.fFoodRefresh()
-        
+
+    #If snake head collides with square border
+    if bDetectBorder(cSnake.theSnakes[0], lScreenLimits):
+        cScore.bPrintGameOver(cParam.getScore())
+        bGameIsOn = False
+
+    #If snake head collides with its own body
+    if bDetectCollitionWithBody(cSnake.theSnakes[0]):
+        cScore.bPrintGameOver(cParam.getScore())
+        bGameIsOn = False
         
 #Close the screen -- last instruction of the program
 theScreen.exitonclick()
