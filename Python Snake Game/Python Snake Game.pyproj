@@ -22,6 +22,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Food.py" />
+    <Compile Include="highScoreFile.py" />
     <Compile Include="Parameters.py" />
     <Compile Include="Score.py" />
     <Compile Include="SnakeClass.py" />

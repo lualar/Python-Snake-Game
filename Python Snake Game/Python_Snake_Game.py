@@ -12,6 +12,7 @@ cScore = Score()
 
 #Create the screen
 theScreen = Screen()
+theScreen.tracer(0)
 theScreen.setup(width=cParam.iScreenWidth, height=cParam.iScreenHeight)
 
 #Clear the screen after each movement
@@ -33,7 +34,7 @@ def bDetectBorder(cSnakeHead, lScreenLimits):
     tCurrentPosition = cSnakeHead.pos()
 
     #validate if Snake Head  position is same of food point
-    if (tCurrentPosition[0] == lScreenLimits[0]) or (tCurrentPosition[0] == lScreenLimits[1]) or (tCurrentPosition[1] == lScreenLimits[2]) or (tCurrentPosition[1] == lScreenLimits[3]):
+    if (tCurrentPosition[0] >= lScreenLimits[0]) or (tCurrentPosition[0] <= lScreenLimits[1]) or (tCurrentPosition[1] >= lScreenLimits[2]) or (tCurrentPosition[1] <= lScreenLimits[3]):
         return True
 
     #If not border return false, game continues
@@ -42,8 +43,8 @@ def bDetectBorder(cSnakeHead, lScreenLimits):
 def bDetectCollitionWithBody(cSnakeHead):
 
     #validate if head is on same position of any other square of the Snake
-    for i in range(1, cSnake.iSnakeLenght):
-        if cSnakeHead.distance(cSnake.theSnakes[i]) < cParam.iSnakeSize-5:
+    for segment in cSnake.theSnakes[1:]:
+        if cSnakeHead.distance(segment) < 10:
             return True
     #If not game continues
     return False
@@ -58,38 +59,42 @@ cSnake = Snake()
 cFood = Food()
 cParam = Parameters()
 cScore = Score()
-cScore.bPrintScore(cParam.getScore())
+cScore.bPrintScore()
 
 #Screen and Key events assigment 
+theScreen.listen()
 theScreen.onkey(key="Up",fun=cSnake.turnUp)   #This is a sample of a higher order function
 theScreen.onkey(key="Down",fun=cSnake.turnDown)   #This is a sample of a higher order function
 theScreen.onkey(key="Left",fun=cSnake.moveLeft)   #This is a sample of a higher order function
 theScreen.onkey(key="Right",fun=cSnake.moveRight)   #This is a sample of a higher order function
-theScreen.listen()
 
 #Get Screen Borders 
 lScreenLimits = cParam.getScreenLimit()
 
 #Snake walk through screen
-
 while bGameIsOn:
     theScreen.update()
+    #time.sleep(0.1)
     cSnake.fTracer()
+
     #Detect Collition
     if bDetectFoodCollition(cSnake.theSnakes[0]):
         #Increment Score
-        cParam.bUpdateScore(1)
-        cScore.bPrintScore(cParam.getScore())
+        cScore.updateScore(1)
 
     #If snake head collides with square border
     if bDetectBorder(cSnake.theSnakes[0], lScreenLimits):
-        cScore.bPrintGameOver(cParam.getScore())
-        bGameIsOn = False
+        cScore.resetScore()
+        #ReStart the Snake
+        cSnake.bStartSnake()
+        #bGameIsOn = False
 
     #If snake head collides with its own body
     if bDetectCollitionWithBody(cSnake.theSnakes[0]):
-        cScore.bPrintGameOver(cParam.getScore())
-        bGameIsOn = False
+        cScore.resetScore()
+        #ReStart the Snake
+        cSnake.bStartSnake()
+        #bGameIsOn = False
         
 #Close the screen -- last instruction of the program
 theScreen.exitonclick()

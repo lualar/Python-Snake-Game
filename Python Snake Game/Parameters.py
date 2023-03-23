@@ -8,8 +8,7 @@ class Parameters():
         self.iScreenHeight = 500
         self.sBackColor = "Black"
         self.iSnakeSize = 20  #Snake Size of pixels
-        self.iScore = 0  #Player Score
-        
+
         #Define screen limits
         self.limitX =  (self.iScreenWidth - self.iSnakeSize*2) / 2 #X right
         self.limitX1 = (self.iScreenWidth - self.iSnakeSize*2) / -2     #X left
@@ -27,12 +26,6 @@ class Parameters():
         lLimits.append(self.limitY1)
         return lLimits
 
-    def bUpdateScore(self, iPoint):
-        self.iScore += iPoint
-
-
-    def getScore(self):
-        return self.iScore
 
 
 
